@@ -1,0 +1,158 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Guru+ | Invoice Details</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 24px;
+            color: #333;
+            background-color: #f5f6f8;
+        }
+
+        h1, h2 {
+            color: #26354a;
+        }
+
+        section {
+            background-color: #fff;
+            padding: 20px;
+            margin-bottom: 24px;
+            border-radius: 6px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #175ca8;
+        }
+
+        .invoice-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px 40px;
+        }
+
+        .invoice-info p {
+            margin: 8px 0;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #eef1f5;
+        }
+
+        .empty-message,
+        .note {
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Navigation back to the main dashboard -->
+<header>
+    <a class="back-link" th:href="@{/}">
+        Back to Dashboard
+    </a>
+
+    <h1 th:text="|Invoice #${invoice.invoiceNumber()}|">
+        Invoice Details
+    </h1>
+</header>
+
+<main>
+
+    <!-- Invoice information -->
+    <section>
+        <h2>Invoice Information</h2>
+
+        <div class="invoice-info">
+            <p>
+                <strong>Invoice Number:</strong>
+                <span th:text="${invoice.invoiceNumber()}"></span>
+            </p>
+
+            <p>
+                <strong>Customer Number:</strong>
+                <span th:text="${invoice.customerNumber()}"></span>
+            </p>
+
+            <p>
+                <strong>Representative ID:</strong>
+                <span th:text="${invoice.representativeId()}"></span>
+            </p>
+
+            <p>
+                <strong>Date of Sale:</strong>
+                <span th:text="${invoice.dateOfSale()}"></span>
+            </p>
+        </div>
+    </section>
+
+    <!-- Line items associated with the selected invoice -->
+    <section>
+        <h2>Invoice Line Items</h2>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                <tr>
+                    <th scope="col">Line ID</th>
+                    <th scope="col">Item Number</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Retail Price</th>
+                    <th scope="col">Discount</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="line : ${invoice.lines()}">
+                    <td th:text="${line.lineItemId()}"></td>
+                    <td th:text="${line.itemNumber()}"></td>
+                    <td th:text="${line.description()}"></td>
+                    <td th:text="${line.qty()}"></td>
+                    <td th:text="${line.retail()}"></td>
+                    <td th:text="${line.discount() != null ? line.discount() : 'None'}"></td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(invoice.lines())}">
+                    <td colspan="6" class="empty-message">
+                        No line items found for this invoice.
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p class="note">
+            Discount values are displayed as stored.
+        </p>
+    </section>
+
+</main>
+
+</body>
+</html>

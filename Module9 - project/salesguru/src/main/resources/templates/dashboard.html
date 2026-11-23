@@ -1,0 +1,238 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Guru+ | Dashboard</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 24px;
+            color: #333;
+            background-color: #f5f6f8;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        h1, h2 {
+            color: #26354a;
+        }
+
+        section {
+            background-color: #fff;
+            padding: 20px;
+            margin-bottom: 24px;
+            border-radius: 6px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #eef1f5;
+        }
+
+        a {
+            color: #175ca8;
+        }
+
+        button {
+            padding: 8px 14px;
+            cursor: pointer;
+        }
+
+        .empty-message {
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Application header and authenticated user information -->
+<header>
+    <div>
+        <h1>Sales Guru+</h1>
+        <p>Sales Management Dashboard</p>
+    </div>
+
+    <div>
+        <p>
+            Signed in as:
+            <strong th:text="${username}">User</strong>
+        </p>
+
+        <form th:action="@{/logout}" method="post">
+            <button type="submit">Log Out</button>
+        </form>
+    </div>
+</header>
+
+<main>
+
+    <!-- Company records -->
+    <section>
+        <h2>Companies</h2>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                <tr>
+                    <th scope="col">Customer Number</th>
+                    <th scope="col">Company Name</th>
+                    <th scope="col">City</th>
+                    <th scope="col">State</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="company : ${companies}">
+                    <td th:text="${company.customer_number}"></td>
+                    <td th:text="${company.name}"></td>
+                    <td th:text="${company.city}"></td>
+                    <td th:text="${company.state}"></td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(companies)}">
+                    <td colspan="4" class="empty-message">
+                        No companies found.
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Representative records -->
+    <section>
+        <h2>Representatives</h2>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                <tr>
+                    <th scope="col">Representative ID</th>
+                    <th scope="col">Customer Number</th>
+                    <th scope="col">First Name</th>
+                    <th scope="col">Last Name</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="rep : ${representatives}">
+                    <td th:text="${rep.representative_id}"></td>
+                    <td th:text="${rep.customer_number}"></td>
+                    <td th:text="${rep.first}"></td>
+                    <td th:text="${rep.last}"></td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(representatives)}">
+                    <td colspan="4" class="empty-message">
+                        No representatives found.
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Products available for sale -->
+    <section>
+        <h2>Items for Sale</h2>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                <tr>
+                    <th scope="col">Item Number</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Cost</th>
+                    <th scope="col">Retail</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="item : ${items}">
+                    <td th:text="${item.itemNumber}"></td>
+                    <td th:text="${item.description}"></td>
+                    <td th:text="${item.cost}"></td>
+                    <td th:text="${item.retail}"></td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(items)}">
+                    <td colspan="4" class="empty-message">
+                        No items found.
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Invoice records and details navigation -->
+    <section>
+        <h2>Invoices</h2>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                <tr>
+                    <th scope="col">Invoice Number</th>
+                    <th scope="col">Customer Number</th>
+                    <th scope="col">Representative ID</th>
+                    <th scope="col">Date of Sale</th>
+                    <th scope="col">Details</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="invoice : ${invoices}">
+                    <td th:text="${invoice.invoiceNumber}"></td>
+                    <td th:text="${invoice.customerNumber}"></td>
+                    <td th:text="${invoice.representativeId}"></td>
+                    <td th:text="${invoice.dateOfSale}"></td>
+
+                    <td>
+                        <a th:href="@{/invoices/{id}/view(id=${invoice.invoiceNumber})}">
+                            View Details
+                        </a>
+                    </td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(invoices)}">
+                    <td colspan="5" class="empty-message">
+                        No invoices found.
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+</main>
+
+</body>
+</html>
